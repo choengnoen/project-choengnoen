@@ -13,18 +13,20 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap');
 
-/* โทนสีระบบควบคุมงานโครงการ: เขียวมรกต (ระบบอุบัติเหตุใช้น้ำเงิน-ส้ม) */
+/* โทนสีระบบควบคุมงานโครงการ: น้ำเงินฟ้าสด + ปุ่มส้ม
+   (ไม่ใช้เทา/เขียวเป็นสีหลัก · ไม่ซ้ำระบบอื่น: กรมท่า=อุบัติเหตุ/Index/บริหารหมวด, แดงเลือดหมู=โจรกรรม, เขียว=ชี้แนวเขต, ม่วงคราม=ขออนุญาต)
+   สีบอกสถานะ (ok/warn/bad/info) คงไว้ตามความหมายสากล */
 :root{
-  --ink:#14241f; --ink-2:#03201a; --ink-soft:#4a5c56; --ink-mute:#84958f;
-  --paper:#f3f6f4; --paper-2:#e8eeea; --card:#FFFFFF; --line:#d9e2dd;
-  --brand-900:#073d33; --brand-800:#0c5a4b; --brand-700:#12705f;
-  --acc:#0b8f63; --acc-500:#1fb383; --acc-deep:#0a6f4d; --acc-glow:#e1f5ec;
+  --ink:#13284a; --ink-2:#06244f; --ink-soft:#3f5577; --ink-mute:#6f84a3;
+  --paper:#f3f7fc; --paper-2:#e6eef9; --card:#FFFFFF; --line:#d9e4f3;
+  --brand-900:#0b2d63; --brand-800:#1a56b0; --brand-700:#2a67c4;
+  --acc:#2f6fd6; --acc-500:#3b82f6; --acc-deep:#1d4fa8; --acc-glow:#e8f0fe;
   --ok:#2f7d4f; --ok-bg:#e6f3ea;
   --warn:#9a6a08; --warn-bg:#fdf3dc;
   --bad:#c1402f; --bad-bg:#fbeae7;
   --info:#1f64a3; --info-bg:#e6effa;
-  --shadow:0 1px 2px rgba(7,61,51,.05),0 10px 22px -16px rgba(7,61,51,.18);
-  --shadow-lg:0 16px 40px -14px rgba(3,32,26,.38);
+  --shadow:0 1px 2px rgba(19,40,74,.05),0 10px 22px -16px rgba(19,40,74,.18);
+  --shadow-lg:0 16px 40px -14px rgba(6,20,45,.38);
   --radius:12px;
 }
 *{box-sizing:border-box}
@@ -40,16 +42,16 @@ a{color:var(--acc-deep)}
 .app-header .top-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;max-width:1240px;margin:0 auto}
 .app-header h1{font-size:21px;margin:0 0 2px;color:#fff;letter-spacing:-.01em}
 .dept-logo{width:60px;height:60px;flex:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
-.app-header .sub{font-size:13px;color:#9fb3ac;margin:0}
-.app-header .who{font-size:12.5px;color:#8fa59d;margin:0;text-align:right}
+.app-header .sub{font-size:13px;color:#c9dbf5;margin:0}
+.app-header .who{font-size:14px;color:#c9dbf5;margin:0;text-align:right}
 .demo-badge{display:inline-block;background:#f7c948;color:#3d2e00;font-family:'Kanit',sans-serif;font-weight:600;font-size:11.5px;border-radius:99px;padding:1px 10px;margin-left:6px;vertical-align:2px}
 .project-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;max-width:1240px;margin:12px auto 0}
 .project-bar select{font-family:'Kanit',sans-serif;font-weight:500;font-size:14px;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:9px;padding:6px 10px;max-width:min(720px,100%)}
 .project-bar select option{color:var(--ink)}
 .status-pill{font-size:12px;border-radius:99px;padding:2px 10px;font-weight:600;white-space:nowrap}
 .tabs{display:flex;gap:0;max-width:1240px;margin:12px auto 0;overflow-x:auto;border-top:1px solid rgba(255,255,255,.08);scrollbar-width:thin}
-.tab-btn{font-family:'Kanit',sans-serif;font-weight:600;font-size:13px;background:transparent;border:none;color:#8aa39a;padding:10px 13px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s}
-.tab-btn:hover{color:#e2ebe7}
+.tab-btn{font-family:'Kanit',sans-serif;font-weight:600;font-size:13px;background:transparent;border:none;color:#a9c1e6;padding:10px 13px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s}
+.tab-btn:hover{color:#e8f0fd}
 .tab-btn.active{color:#fff;border-bottom-color:var(--acc-500)}
 .tab-btn .cnt{background:var(--bad);color:#fff;border-radius:99px;font-size:10.5px;padding:0 6px;margin-left:4px;vertical-align:1px}
 
@@ -72,18 +74,19 @@ a{color:var(--acc-deep)}
 .field label{font-size:12.5px;color:var(--ink-soft);font-weight:600}
 .field label .req{color:var(--bad)}
 .field input,.field select,.field textarea,.inp{font-family:'Sarabun',sans-serif;font-size:14.5px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s;width:100%;min-width:0}
-.field input:focus,.field select:focus,.field textarea:focus,.inp:focus{outline:none;border-color:var(--acc-500);box-shadow:0 0 0 3px rgba(11,143,99,.15)}
+.field input:focus,.field select:focus,.field textarea:focus,.inp:focus{outline:none;border-color:var(--acc-500);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
 .field textarea{resize:vertical;min-height:60px}
 .field input[type=checkbox],.field input[type=radio]{width:auto;padding:0;margin:0 6px 0 0;vertical-align:-2px;accent-color:var(--acc)}
 .field label:has(input[type=checkbox]){display:flex;align-items:center;font-weight:500;color:var(--ink);padding-top:9px}
-.hint{font-size:12px;color:#879390}
+.hint{font-size:12px;color:#6f84a3}
 .pw-wrap{position:relative;display:flex}
 .pw-wrap input{flex:1;padding-right:38px}
 .pw-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:transparent;border:none;cursor:pointer;font-size:15px;color:var(--ink-soft);padding:4px 8px;line-height:1}
 
 .btn{font-family:'Kanit',sans-serif;font-weight:600;font-size:14px;border-radius:10px;border:1px solid transparent;padding:8px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:filter .15s,background .15s;white-space:nowrap;text-decoration:none}
 .btn:active{transform:translateY(1px)}
-.btn-primary{background:linear-gradient(135deg,var(--acc-500),var(--acc));color:#fff;box-shadow:0 4px 12px -2px rgba(11,143,99,.38)}
+/* ปุ่มหลัก: สีส้มแบบเดียวกับระบบงานอุบัติเหตุ */
+.btn-primary{background:linear-gradient(135deg,#f07a1f,#e0620f);color:#fff;box-shadow:0 4px 12px -2px rgba(224,98,15,.4)}
 .btn-primary:hover{filter:brightness(1.06)}
 .btn-outline{background:#fff;border-color:var(--line);color:var(--ink)}
 .btn-outline:hover{background:var(--paper-2)}
@@ -93,7 +96,7 @@ a{color:var(--acc-deep)}
 .btn-danger:hover{filter:brightness(.97)}
 .btn-sm{padding:4px 10px;font-size:12.5px;border-radius:7px}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.btn-header{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);color:#e5eeea}
+.btn-header{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);color:#e8f0fd}
 .btn-header:hover{background:rgba(255,255,255,.16)}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 .toolbar .grow{flex:1}
@@ -106,10 +109,10 @@ table.data th{background:var(--paper-2);color:var(--ink-soft);font-weight:600;fo
 table.data td{padding:8px 10px;border-bottom:1px solid var(--paper-2);vertical-align:top}
 table.data tr:last-child td{border-bottom:none}
 table.data tr.clickable{cursor:pointer}
-table.data tr.clickable:hover td{background:#f6faf8}
+table.data tr.clickable:hover td{background:#f3f8fe}
 table.data td.r,table.data th.r{text-align:right}
 table.data td.c,table.data th.c{text-align:center}
-table.data tfoot td{font-weight:700;background:#fafcfb;border-top:1px solid var(--line)}
+table.data tfoot td{font-weight:700;background:#f7faff;border-top:1px solid var(--line)}
 .empty{padding:26px;text-align:center;color:var(--ink-mute)}
 
 /* ---------- ป้ายสถานะ ---------- */
@@ -157,15 +160,15 @@ table.data tfoot td{font-weight:700;background:#fafcfb;border-top:1px solid var(
 .ph .flag{position:absolute;top:6px;right:6px}
 .day-head{font-family:'Kanit',sans-serif;font-weight:600;color:var(--brand-900);margin:18px 0 8px;display:flex;gap:8px;align-items:center}
 .day-head .n{font-family:'Sarabun',sans-serif;font-weight:400;color:var(--ink-mute);font-size:13px}
-.lightbox{position:fixed;inset:0;background:rgba(3,20,16,.92);z-index:9000;display:none;flex-direction:column}
+.lightbox{position:fixed;inset:0;background:rgba(6,20,45,.92);z-index:9000;display:none;flex-direction:column}
 .lightbox.show{display:flex}
 .lightbox .lb-img{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:10px}
 .lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
-.lightbox .lb-bar{background:#0b1f1a;color:#dfe9e5;padding:10px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+.lightbox .lb-bar{background:#0a1d3a;color:#dbe6f6;padding:10px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
 .lightbox .lb-bar .grow{flex:1}
 .lightbox .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);color:#fff;border:0;font-size:28px;width:46px;height:64px;border-radius:10px;cursor:pointer}
 .lightbox .nav.prev{left:10px}.lightbox .nav.next{right:10px}
-.drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--ink-soft);background:#fbfdfc;cursor:pointer}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--ink-soft);background:#f8fbff;cursor:pointer}
 .drop.over{border-color:var(--acc-500);background:var(--acc-glow)}
 .upl-row{display:flex;gap:10px;align-items:center;font-size:13px;padding:4px 0;border-bottom:1px dashed var(--paper-2)}
 .upl-row img{width:54px;height:40px;object-fit:cover;border-radius:5px}
@@ -173,7 +176,7 @@ table.data tfoot td{font-weight:700;background:#fafcfb;border-top:1px solid var(
 /* ---------- Checklist ---------- */
 .ck-phase{font-family:'Kanit',sans-serif;font-weight:600;color:var(--brand-900);margin:14px 0 6px;font-size:15px}
 .ck-item{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:start;padding:8px 10px;border:1px solid var(--line);border-radius:9px;margin-bottom:6px;background:#fff}
-.ck-item.done{background:#f4faf7}
+.ck-item.done{background:#f1f7ff}
 .ck-item.done .t{color:var(--ink-mute);text-decoration:line-through;text-decoration-color:rgba(0,0,0,.25)}
 .ck-item input[type=checkbox]{width:18px;height:18px;margin-top:3px;accent-color:var(--acc)}
 .ck-item .meta{font-size:12px;color:var(--ink-mute)}
@@ -181,7 +184,7 @@ table.data tfoot td{font-weight:700;background:#fafcfb;border-top:1px solid var(
 .guide li{margin-bottom:4px;font-size:14px}
 
 /* ---------- Modal ---------- */
-.modal-backdrop{position:fixed;inset:0;background:rgba(3,32,26,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding:4vh 14px;overflow:auto}
+.modal-backdrop{position:fixed;inset:0;background:rgba(6,20,45,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding:4vh 14px;overflow:auto}
 .modal{background:#fff;border-radius:16px;width:100%;max-width:760px;box-shadow:var(--shadow-lg);animation:pop .18s ease-out}
 .modal.wide{max-width:1080px}
 .modal.narrow{max-width:460px}
@@ -291,6 +294,7 @@ table.data tfoot td{font-weight:700;background:#fafcfb;border-top:1px solid var(
 <script src="firebase-layer.js"></script>
 <script src="app-data.js"></script>
 <script src="app-util.js"></script>
+<script src="app-docs.js"></script>
 <script src="app-reports.js"></script>
 <script src="app.js"></script>
 <script src="app-views.js"></script>

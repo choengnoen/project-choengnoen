@@ -83,6 +83,7 @@
     const id = await FBL.saveProject(p);
     return id;
   };
+  A.roleTag = function (u) { return u && u.isOwner ? ' 👑' : (u && u.isAdmin ? ' 🛡️' : ''); };
   A.can = function () { return FBL.user && (FBL.user.isOwner || FBL.user.isAdmin); };
 
   /* ======================= หน้าล็อกอิน (เหมือนระบบงานอุบัติเหตุ) ======================= */
@@ -165,8 +166,10 @@
     appStarted = true;
     $('appHeader').style.display = ''; $('main').style.display = '';
     $('demoBadge').style.display = FBL.mode === 'demo' ? '' : 'none';
-    const role = FBL.user.isOwner ? 'เจ้าของระบบ' : (FBL.user.isAdmin ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งาน');
-    $('whoDisplay').innerHTML = esc(FBL.user.name) + ' · ' + role;
+    // แบบเดียวกับระบบงานอุบัติเหตุ: 👑 เจ้าของระบบ / 🛡️ ผู้ดูแลระบบ
+    const tag = A.roleTag(FBL.user);
+    $('whoDisplay').textContent = 'ผู้บันทึก: ' + FBL.user.name + tag;
+    $('whoDisplay').title = FBL.user.isOwner ? 'เจ้าของระบบ' : (FBL.user.isAdmin ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งาน');
     $('btnLogout').onclick = async function () { if (await A.confirm('ออกจากระบบ?', 'ออกจากระบบ')) { await FBL.logout(); location.reload(); } };
     $('btnNewProject').onclick = function () { A.newProjectDialog(); };
     $('projectSelect').onchange = function () { selectProject(this.value); };
@@ -379,7 +382,7 @@
       kpi('ผลงานจริงสะสม', U.pct(act, 2), Math.abs(diff) < 0.005 ? 'เป็นไปตามแผน' : (diff > 0 ? 'เร็วกว่าแผน ' : 'ช้ากว่าแผน ') + U.pct(Math.abs(diff)), act, plan) +
       kpi('มูลค่าผลงาน', U.money(act / 100 * total, 0) + '<small> บาท</small>', 'จาก ' + U.money(total, 0) + ' บาท', act) + '</div>' +
       '<div class="split"><div class="card chart-box"><div class="section-title">แผน-ผลงานสะสม (S-Curve)</div>' + R.sCurveSvg(p, units, { until: ref }) +
-      '<div class="legend"><span><i style="background:#9aa8a3"></i>แผนงาน</span><span><i style="background:var(--acc)"></i>ผลงานจริง</span><span><i style="background:#c1402f;height:8px;width:2px"></i>1/4, 2/4 ของเวลา / สิ้นสุดสัญญา</span></div>' +
+      '<div class="legend"><span><i style="background:#9db5d8"></i>แผนงาน</span><span><i style="background:#e0620f"></i>ผลงานจริง</span><span><i style="background:#1a56b0;height:8px;width:2px"></i>1/4, 2/4 ของเวลา / สิ้นสุดสัญญา</span></div>' +
       checkpointTable(p, units) + '</div>' +
       '<div class="card"><div class="section-title">เรื่องที่ต้องติดตาม <span class="sub">' + alerts.length + ' รายการ</span></div><div class="alert-list">' + A.alertHtml(alerts) + '</div></div></div>' +
       '<div class="card"><div class="section-title">บันทึกประจำวันล่าสุด<span class="right"><button class="btn btn-sm btn-primary" id="dNewDaily">+ บันทึกวันนี้</button></span></div>' +
@@ -799,7 +802,7 @@
       (owner ? '<div class="card"><div class="section-title">ผู้ใช้งานระบบ<span class="right"><button class="btn btn-sm btn-outline" id="tmAdd">+ เพิ่มผู้ใช้</button></span></div>' +
         '<div class="table-wrap"><table class="data"><thead><tr><th>ชื่อ</th><th>สิทธิ์</th><th></th></tr></thead><tbody>' +
         FBL.team().map(function (t) {
-          return '<tr><td>' + esc(t.name) + '</td><td>' + (t.isOwner ? 'เจ้าของระบบ' : (t.isAdmin ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งาน')) + '</td><td class="r nowrap">' +
+          return '<tr><td>' + esc(t.name + A.roleTag(t)) + '</td><td>' + (t.isOwner ? 'เจ้าของระบบ' : (t.isAdmin ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งาน')) + '</td><td class="r nowrap">' +
             (t.isOwner ? '' : '<button class="btn btn-sm btn-ghost" data-adm="' + esc(t.name) + '" data-v="' + (t.isAdmin ? '0' : '1') + '">' + (t.isAdmin ? 'ถอดผู้ดูแล' : 'ตั้งเป็นผู้ดูแล') + '</button>' +
               '<button class="btn btn-sm btn-ghost" data-rpw="' + esc(t.name) + '">ตั้งรหัสใหม่</button><button class="btn btn-sm btn-ghost" style="color:var(--bad)" data-rm="' + esc(t.name) + '">ลบ</button>') + '</td></tr>';
         }).join('') + '</tbody></table></div></div>' : '') +

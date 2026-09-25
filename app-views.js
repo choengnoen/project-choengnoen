@@ -493,6 +493,8 @@
     }
     m.q('#upOk').onclick = async function () {
       const btn = this; btn.disabled = true;
+      // กด "ลองใหม่" หลังมีรูปที่อัปโหลดไม่สำเร็จ → ส่งเฉพาะรูปที่ไม่สำเร็จอีกครั้ง
+      files.forEach(function (x) { if (x.err) { x.err = false; x.st = 'รอ'; } });
       const base = { date: m.q('#upDate').value, category: m.q('#upCat').value, unitId: m.q('#upUnit').value, km: A.val(m, '#upKm'), side: A.val(m, '#upSide'), desc: A.val(m, '#upDesc') };
       const u = A.active('units').find(function (z) { return z.id === base.unitId; });
       let ok = 0;
@@ -519,11 +521,21 @@
             flag: flag, noExif: noExif
           }, 'รูป ' + date);
           x.st = flag ? '✓ (มีข้อสังเกต: ' + flag + ')' : (noExif ? '✓ เสร็จ (ไม่มีข้อมูลกล้องในไฟล์ — ใช้วันที่ ' + U.thDate(date, 'short') + ')' : '✓ เสร็จ'); ok++;
-        } catch (e) { x.st = '✗ ' + e.message; }
+        } catch (e) { x.st = '✗ ' + e.message; x.err = true; }
         draw();
       }
-      A.toast('อัปโหลดสำเร็จ ' + ok + ' รูป');
-      btn.textContent = 'เสร็จสิ้น';
+      const failed = files.filter(function (x) { return x.err; }).length;
+      const flagged = files.filter(function (x) { return /มีข้อสังเกต/.test(x.st); }).length;
+      if (!failed) {
+        // สำเร็จครบทุกรูป → ปิดหน้าต่างเอง
+        m.close();
+        A.toast('อัปโหลดสำเร็จ ' + ok + ' รูป' + (flagged ? ' — มี ' + flagged + ' รูปที่อาจเป็นภาพสร้างด้วย AI โปรดตรวจสอบ' : ''), !!flagged);
+        return;
+      }
+      // มีรูปที่ไม่สำเร็จ → คงหน้าต่างไว้ให้เห็นสาเหตุ และกดลองใหม่เฉพาะรูปที่ไม่สำเร็จได้
+      A.toast('อัปโหลดสำเร็จ ' + ok + ' รูป · ไม่สำเร็จ ' + failed + ' รูป (ดูสาเหตุในหน้าต่าง)', true);
+      btn.disabled = false;
+      btn.textContent = 'ลองใหม่ ' + failed + ' รูป';
     };
   };
 
@@ -642,7 +654,8 @@
       '<div><div class="card"><div class="section-title">รายงานอื่นๆ</div><div class="grid grid-2">' +
       tiles.map(function (x) { return '<button class="btn btn-outline" style="flex-direction:column;align-items:flex-start;white-space:normal;text-align:left;padding:12px" data-tile="' + x[0] + '"><span>' + esc(x[1]) + '</span><span class="small muted" style="font-family:Sarabun;font-weight:400">' + esc(x[2]) + '</span></button>'; }).join('') +
       '</div></div><div class="card"><div class="section-title">หมายเหตุ</div><ul class="small" style="margin:0;padding-left:18px">' +
-      '<li>"พิมพ์ / บันทึกเป็น PDF" ให้ผลตรงรูปแบบที่สุด (มีกราฟและรูป)</li><li>"ดาวน์โหลด Word" เปิดด้วย Microsoft Word แก้ไขต่อได้ ใช้ฟอนต์ TH SarabunPSK</li>' +
+      '<li>บันทึกข้อความใช้รูปแบบเดียวกับหนังสือเดิมของโครงการ: ตราครุฑ · TH SarabunIT๙ 16 · ต้นฉบับ + สำเนาเรียนกรรมการ ตามระเบียบงานสารบรรณ</li>' +
+      '<li>"ดาวน์โหลด Word (.docx)" ได้ไฟล์ Word จริง หน้าตาเดียวกับ PDF และแก้ไขต่อได้</li>' +
       '<li>เมื่อส่งหนังสือแล้ว กด "ลงทะเบียนหนังสือออก" เพื่อให้เลขที่รันต่อและสถานะรายงานเปลี่ยนเป็นส่งแล้ว</li></ul></div></div></div>';
     el.querySelectorAll('[data-mk]').forEach(function (b) { b.onclick = function () { const a = b.dataset.mk.split('|'); periodDialog(a[0], a[1]); }; });
     el.querySelectorAll('[data-tile]').forEach(function (b) {
@@ -663,10 +676,6 @@
     try { const r = await R.build(type, o); done(); R.openPreview(r, meta); return true; }
     catch (e) { done(); A.toast(e.message, true); return false; }
   }
-  function memoFields(defDate) {
-    return '<div class="grid grid-2"><div class="field"><label>เลขที่หนังสือ</label><input id="rpNo" value="' + esc(U.nextDocNo(S.p, A.active('docs'))) + '"></div>' +
-      '<div class="field"><label>ลงวันที่</label><input type="date" id="rpDate" value="' + esc(defDate || U.today()) + '"></div></div>';
-  }
   function periodDialog(type, key) {
     const pr = U.periods(S.p);
     let def = U.today();
@@ -674,13 +683,31 @@
     if (type === 'weekly') def = (pr.weeks.find(function (w) { return w.key === key; }) || {}).due || def;
     if (type === 'monthly') def = (pr.months.find(function (x) { return x.key === key; }) || {}).due || def;
     if (def > U.today()) def = U.today();
+    const df = R.defaults(type, { period: key });
+    const ATT = { summary: 'สรุปผลการปฏิบัติงานประจำสัปดาห์', daily: 'แบบบันทึกการปฏิบัติงานประจำวัน', photos: 'รูปถ่าย (จากคลังรูปของช่วงนี้)', plan: 'ตารางแผนและผลงานประจำเดือน' };
     const m = A.modal({
-      title: 'สร้างรายงาน', size: 'narrow', body: memoFields(def) + '<p class="hint">ตรวจบันทึกประจำวันของช่วงนี้ให้ครบก่อนสร้างรายงาน</p>',
+      title: 'สร้างรายงาน', size: 'wide',
+      body: '<div class="grid grid-3">' +
+        '<div class="field"><label>เลขที่หนังสือ</label><input id="rpNo" value="' + esc(U.nextDocNo(S.p, A.active('docs'))) + '"></div>' +
+        '<div class="field"><label>ลงวันที่</label><input type="date" id="rpDate" value="' + esc(def) + '"></div>' +
+        '<div class="field"><label>จำนวนสำเนา (มี "สำเนาเรียน" กรรมการ)</label><input type="number" min="0" max="9" id="rpCopies" value="' + df.copies + '"></div>' +
+        '<div class="field span-all"><label>เรื่อง</label><input id="rpSubj" value="' + esc(df.subject) + '"></div>' +
+        '<div class="field span-all"><label><input type="checkbox" id="rpContract" checked> ขึ้นต้นด้วยย่อหน้าอ้างสัญญา (ตามสัญญาจ้างเลขที่ ... นั้น)</label></div>' +
+        '<div class="field span-all"><label>เนื้อความ (ขึ้นบรรทัดใหม่ = ย่อหน้าใหม่)</label><textarea id="rpBody" rows="4">' + esc(df.body) + '</textarea></div>' +
+        '<div class="field span-all"><label>ปิดท้าย</label><input id="rpClose" value="' + esc(df.closing) + '"></div>' +
+        '<div class="field span-all"><label>เอกสารแนบ</label><div class="flex">' + Object.keys(df.attach).map(function (k) {
+          return '<label style="font-weight:400"><input type="checkbox" data-att="' + k + '"' + (df.attach[k] ? ' checked' : '') + '> ' + ATT[k] + '</label>';
+        }).join('') + '</div></div></div>' +
+        (type === 'monthly' ? '<p class="hint">บรรทัด "สรุป แผนงานเดือน / แผนงานรวม / ผลงานเดือน / ผลงานรวม" คำนวณให้อัตโนมัติ</p>' : '') +
+        '<p class="hint">ตรวจบันทึกประจำวันของช่วงนี้ให้ครบก่อนสร้างรายงาน · รูปแบบหน้าเป็นไปตามบันทึกข้อความเดิมของโครงการ (ตราครุฑ · TH SarabunIT๙)</p>',
       foot: '<button class="btn btn-outline" data-close>ยกเลิก</button><button class="btn btn-primary" id="rpOk">สร้างรายงาน</button>'
     });
     m.q('#rpOk').onclick = async function () {
-      const o = { period: key, no: A.val(m, '#rpNo'), date: m.q('#rpDate').value };
-      if (await run(type, o, { register: true, no: o.no, date: o.date, fileName: o.no.replace(/\//g, '-') + ' ' + type }, this)) m.close();
+      const attach = {}; m.qa('[data-att]').forEach(function (c) { attach[c.dataset.att] = c.checked; });
+      const o = { period: key, no: A.val(m, '#rpNo'), date: m.q('#rpDate').value, subject: A.val(m, '#rpSubj'), body: m.q('#rpBody').value,
+        contract: m.q('#rpContract').checked, closing: A.val(m, '#rpClose'), copies: U.num(m.q('#rpCopies').value), attach: attach };
+      if (!o.subject) return A.toast('ระบุเรื่อง', true);
+      if (await run(type, o, { register: true, no: o.no, date: o.date, fileName: o.no.replace(/\//g, '-') + ' ' + o.subject }, this)) m.close();
     };
   }
   function dailyReportDialog() {
@@ -699,13 +726,17 @@
         '<div class="field"><label>ลงวันที่</label><input type="date" id="rpDate" value="' + U.today() + '"></div>' +
         '<div class="field span-2"><label>เรื่อง</label><input id="ltS"></div><div class="field"><label>เรียน</label><input id="ltTo" value="' + esc(S.p.addressee || '') + '"></div>' +
         '<div class="field span-all"><label>เนื้อความ (ขึ้นบรรทัดใหม่ = ย่อหน้าใหม่ · {สัญญา} = ย่อหน้าอ้างสัญญาอัตโนมัติ)</label><textarea id="ltB" rows="9"></textarea></div>' +
-        '<div class="field span-all"><label>ปิดท้าย</label><input id="ltC" value="จึงเรียนมาเพื่อโปรดทราบ"></div></div>',
+        '<div class="field span-2"><label>ปิดท้าย</label><input id="ltC" value="จึงเรียนมาเพื่อโปรดทราบ"></div>' +
+        '<div class="field"><label>จำนวนสำเนา (มี "สำเนาเรียน" กรรมการ)</label><input type="number" min="0" max="9" id="ltCopies" value="0"></div></div>',
       foot: '<button class="btn btn-outline" data-close>ยกเลิก</button><button class="btn btn-primary" id="ltOk">สร้าง</button>'
     });
-    function fill() { const x = T.find(function (t) { return t.key === m.q('#ltT').value; }); m.q('#ltS').value = x.subject; m.q('#ltB').value = x.body; if (/ขอ|ส่ง/.test(x.subject)) m.q('#ltC').value = x.key === 'stop' ? 'จึงเรียนมาเพื่อโปรดทราบ' : 'จึงเรียนมาเพื่อโปรดพิจารณา'; }
+    // คำปิดท้ายตามหนังสือจริง: ขอ/ส่ง → "จึงเรียนมาเพื่อโปรดพิจารณาดำเนินการต่อไป" · แจ้ง/รายงาน → "จึงเรียนมาเพื่อโปรดทราบ"
+    function fill() { const x = T.find(function (t) { return t.key === m.q('#ltT').value; }); m.q('#ltS').value = x.subject; m.q('#ltB').value = x.body; m.q('#ltC').value = /ขอ|ส่ง/.test(x.subject) && x.key !== 'stop' ? 'จึงเรียนมาเพื่อโปรดพิจารณาดำเนินการต่อไป' : 'จึงเรียนมาเพื่อโปรดทราบ'; }
     m.q('#ltT').onchange = fill; fill();
     m.q('#ltOk').onclick = async function () {
-      const o = { no: A.val(m, '#rpNo'), date: m.q('#rpDate').value, subject: A.val(m, '#ltS'), to: A.val(m, '#ltTo'), body: m.q('#ltB').value, closing: A.val(m, '#ltC') };
+      const body = m.q('#ltB').value;
+      const o = { no: A.val(m, '#rpNo'), date: m.q('#rpDate').value, subject: A.val(m, '#ltS'), to: A.val(m, '#ltTo'), body: body, contract: body.indexOf('{สัญญา}') >= 0,
+        closing: A.val(m, '#ltC'), copies: U.num(m.q('#ltCopies').value) };
       if (!o.subject) return A.toast('ระบุเรื่อง', true);
       if (await run('letter', o, { register: true, no: o.no, date: o.date, fileName: o.no.replace(/\//g, '-') + ' ' + o.subject }, this)) m.close();
     };
