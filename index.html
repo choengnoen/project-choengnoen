@@ -40,20 +40,28 @@ a{color:var(--acc-deep)}
 .shell{max-width:1240px;margin:0 auto;padding:0 18px 70px}
 
 /* ---------- ส่วนหัว ---------- */
-.app-header{background:var(--brand-900);color:var(--paper);padding:18px 22px 0;border-bottom:1px solid rgba(0,0,0,.35)}
+/* รูปแบบเดียวกับหัวเว็บระบบงานอุบัติเหตุ */
+.app-header{background:radial-gradient(1100px 420px at 12% -20%, var(--brand-800) 0%, #071b30 55%);color:var(--paper);padding:20px 22px 0;position:relative;border-bottom:1px solid rgba(0,0,0,.35)}
 .app-header .top-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;max-width:1240px;margin:0 auto}
-.app-header h1{font-size:21px;margin:0 0 2px;color:#fff;letter-spacing:-.01em}
+.app-header h1{font-size:21px;margin:0 0 3px;color:#fff;letter-spacing:-.01em}
 .dept-logo{width:40px;height:40px;flex:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
-.app-header .sub{font-size:13px;color:rgba(255,255,255,.75);margin:0}
-.app-header .who{font-size:14px;color:rgba(255,255,255,.9);margin:0;text-align:right}
+.app-header .sub{font-size:13px;color:#9DA0A8;margin:0}
+.app-header .who{font-size:12px;color:#787B84;margin:0;text-align:right}
+/* ปุ่มออกจากระบบ: ไม่มีขอบ แบบ btn-ghost ของระบบงานอุบัติเหตุ */
+.app-header #btnLogout{background:transparent;border:none;color:#9DA0A8}
+.app-header #btnLogout:hover{color:#fff;background:transparent}
+.tabs-row{display:flex;align-items:center;gap:10px;max-width:1240px;margin:12px auto 0;border-top:1px solid rgba(255,255,255,.08)}
+.tabs-row .tabs{flex:1;min-width:0;margin:0;max-width:none;border-top:none}
+.header-actions{flex:none;display:flex;gap:8px;align-items:center}
+@media(max-width:900px){.tabs-row{flex-direction:column-reverse;align-items:stretch}.header-actions{justify-content:flex-end;padding:8px 0 2px}}
 .demo-badge{display:inline-block;background:var(--gold);color:#3d2e00;font-family:'Kanit',sans-serif;font-weight:600;font-size:11.5px;border-radius:99px;padding:1px 10px;margin-left:6px;vertical-align:2px}
 .project-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;max-width:1240px;margin:12px auto 0}
 .project-bar select{font-family:'Kanit',sans-serif;font-weight:500;font-size:14px;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:9px;padding:6px 10px;max-width:min(720px,100%)}
 .project-bar select option{color:var(--ink)}
 .status-pill{font-size:12px;border-radius:99px;padding:2px 10px;font-weight:600;white-space:nowrap}
 .tabs{display:flex;gap:0;max-width:1240px;margin:12px auto 0;overflow-x:auto;border-top:1px solid rgba(255,255,255,.08);scrollbar-width:thin}
-.tab-btn{font-family:'Kanit',sans-serif;font-weight:600;font-size:13px;background:transparent;border:none;color:rgba(255,255,255,.65);padding:10px 13px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:color .15s}
-.tab-btn:hover{color:#fff}
+.tab-btn{font-family:'Kanit',sans-serif;font-weight:600;font-size:12.5px;background:transparent;border:none;color:#84878F;padding:9px 13px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;letter-spacing:.01em;transition:color .15s}
+.tab-btn:hover{color:#DEDFE2}
 .tab-btn.active{color:#fff;border-bottom-color:var(--gold)}
 .tab-btn .cnt{background:var(--bad);color:#fff;border-radius:99px;font-size:10.5px;padding:0 6px;margin-left:4px;vertical-align:1px}
 
@@ -272,8 +280,8 @@ html:has(.auth-gate.show){overflow-y:scroll}
   <div class="project-bar">
     <select id="projectSelect" aria-label="เลือกโครงการ"></select>
     <span id="projectStatus"></span>
-    <button class="btn btn-sm btn-header" id="btnNewProject">+ โครงการใหม่</button>
   </div>
+  <div class="tabs-row">
   <nav class="tabs" id="tabs">
     <button class="tab-btn active" data-view="dash">ภาพรวม</button>
     <button class="tab-btn" data-view="daily">บันทึกประจำวัน</button>
@@ -286,6 +294,10 @@ html:has(.auth-gate.show){overflow-y:scroll}
     <button class="tab-btn" data-view="contract">ข้อมูลสัญญา</button>
     <button class="tab-btn" data-view="settings">ตั้งค่า</button>
   </nav>
+  <div class="header-actions">
+    <button class="btn btn-sm btn-header" id="btnNewProject">+ โครงการใหม่</button>
+  </div>
+  </div>
 </header>
 
 <main class="shell" id="main" style="display:none">
