@@ -132,8 +132,8 @@
       '<div class="field" style="margin-bottom:14px"><label>รหัสผ่าน</label><input type="text" id="gateUserShadow" name="username" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">' + A.pwField('gatePass', '', 'current-password') + '</div>' +
       errHtml + '<button class="btn btn-primary auth-btn" id="gateOk">เข้าสู่ระบบ</button>' + demo + '</div>';
     g.querySelectorAll('.pw-toggle').forEach(bindPwToggle);
+    // เหมือนระบบงานอุบัติเหตุ: ขึ้น "— เลือกชื่อของคุณ —" ไว้ก่อน ไม่เลือกชื่อใครไว้ให้ล่วงหน้า
     const gSel = $('gateName'), gShadow = $('gateUserShadow');
-    if (S.team.length === 1) { gSel.value = S.team[0].name; gShadow.value = gSel.value; }
     gSel.addEventListener('change', function () { gShadow.value = gSel.value; });
     gShadow.addEventListener('input', function () { if ([].some.call(gSel.options, function (o) { return o.value === gShadow.value; })) gSel.value = gShadow.value; });
     const login = async function () {
@@ -170,7 +170,7 @@
     const tag = A.roleTag(FBL.user);
     $('whoDisplay').textContent = 'ผู้บันทึก: ' + FBL.user.name + tag;
     $('whoDisplay').title = FBL.user.isOwner ? 'เจ้าของระบบ' : (FBL.user.isAdmin ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งาน');
-    $('btnLogout').onclick = async function () { if (await A.confirm('ออกจากระบบ?', 'ออกจากระบบ')) { await FBL.logout(); location.reload(); } };
+    $('btnLogout').onclick = async function () { await FBL.logout(); location.reload(); };
     $('btnNewProject').onclick = function () { A.newProjectDialog(); };
     $('projectSelect').onchange = function () { selectProject(this.value); };
     $('tabs').querySelectorAll('.tab-btn').forEach(function (b) { b.onclick = function () { A.go(b.dataset.view); }; });
