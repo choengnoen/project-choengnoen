@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>ระบบควบคุมงานโครงการ หมวดทางหลวงเชิงเนิน</title>
-<link rel="icon" href="logo.png">
+<link rel="icon" href="logo.png" data-cn-emblem>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<!-- ฐานข้อมูลกลาง CN-Hub — ใช้ตรากรมทางหลวงจากไฟล์กลาง (โหลดไม่ได้ก็ใช้ logo.png ของระบบนี้ต่อ) -->
+<script src="https://choengnoen.github.io/choengnoen-hub/master-client.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap');
 
@@ -41,7 +43,7 @@ a{color:var(--acc-deep)}
 .app-header{background:var(--brand-900);color:var(--paper);padding:18px 22px 0;border-bottom:1px solid rgba(0,0,0,.35)}
 .app-header .top-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;max-width:1240px;margin:0 auto}
 .app-header h1{font-size:21px;margin:0 0 2px;color:#fff;letter-spacing:-.01em}
-.dept-logo{width:60px;height:60px;flex:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
+.dept-logo{width:40px;height:40px;flex:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
 .app-header .sub{font-size:13px;color:rgba(255,255,255,.75);margin:0}
 .app-header .who{font-size:14px;color:rgba(255,255,255,.9);margin:0;text-align:right}
 .demo-badge{display:inline-block;background:var(--gold);color:#3d2e00;font-family:'Kanit',sans-serif;font-weight:600;font-size:11.5px;border-radius:99px;padding:1px 10px;margin-left:6px;vertical-align:2px}
