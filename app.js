@@ -382,7 +382,7 @@
       kpi('ผลงานจริงสะสม', U.pct(act, 2), Math.abs(diff) < 0.005 ? 'เป็นไปตามแผน' : (diff > 0 ? 'เร็วกว่าแผน ' : 'ช้ากว่าแผน ') + U.pct(Math.abs(diff)), act, plan) +
       kpi('มูลค่าผลงาน', U.money(act / 100 * total, 0) + '<small> บาท</small>', 'จาก ' + U.money(total, 0) + ' บาท', act) + '</div>' +
       '<div class="split"><div class="card chart-box"><div class="section-title">แผน-ผลงานสะสม (S-Curve)</div>' + R.sCurveSvg(p, units, { until: ref }) +
-      '<div class="legend"><span><i style="background:#9db5d8"></i>แผนงาน</span><span><i style="background:#e0620f"></i>ผลงานจริง</span><span><i style="background:#1a56b0;height:8px;width:2px"></i>1/4, 2/4 ของเวลา / สิ้นสุดสัญญา</span></div>' +
+      '<div class="legend"><span><i style="background:#FF6600"></i>แผนงาน</span><span><i style="background:#1E7B1E"></i>ผลงานจริง</span><span><i style="background:#123a5e;height:8px;width:2px"></i>1/4, 2/4 ของเวลา / สิ้นสุดสัญญา</span></div>' +
       checkpointTable(p, units) + '</div>' +
       '<div class="card"><div class="section-title">เรื่องที่ต้องติดตาม <span class="sub">' + alerts.length + ' รายการ</span></div><div class="alert-list">' + A.alertHtml(alerts) + '</div></div></div>' +
       '<div class="card"><div class="section-title">บันทึกประจำวันล่าสุด<span class="right"><button class="btn btn-sm btn-primary" id="dNewDaily">+ บันทึกวันนี้</button></span></div>' +

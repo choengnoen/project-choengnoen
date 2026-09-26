@@ -31,33 +31,33 @@ window.R = (function () {
     if (until >= x0) actPts.push(X(until).toFixed(1) + ',' + Y(U.actualCum(p, units, until)).toFixed(1));
     let g = '';
     [0, 25, 50, 75, 100].forEach(function (v) {
-      g += '<line x1="' + ml + '" x2="' + (W - mr) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="#dde7f4" stroke-width="1"/>' +
-        '<text x="' + (ml - 6) + '" y="' + (Y(v) + 4) + '" text-anchor="end" font-size="11" fill="#6f84a3">' + v + '%</text>';
+      g += '<line x1="' + ml + '" x2="' + (W - mr) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="#e5e9ee" stroke-width="1"/>' +
+        '<text x="' + (ml - 6) + '" y="' + (Y(v) + 4) + '" text-anchor="end" font-size="11" fill="#8792a0">' + v + '%</text>';
     });
     let d = U.parse(x0); d = new Date(d.getFullYear(), d.getMonth(), 1);
     const monthsCount = Math.round(span / 30);
     while (U.iso(d) <= x1) {
       const s = U.iso(d);
       if (s >= x0) {
-        g += '<line x1="' + X(s) + '" x2="' + X(s) + '" y1="' + mt + '" y2="' + (H - mb) + '" stroke="#edf2fa"/>';
+        g += '<line x1="' + X(s) + '" x2="' + X(s) + '" y1="' + mt + '" y2="' + (H - mb) + '" stroke="#f0f2f5"/>';
       }
       const mid = s < x0 ? x0 : s;
       if (monthsCount <= 14 || d.getMonth() % 3 === 0)
-        g += '<text x="' + (X(mid) + 3) + '" y="' + (H - mb + 15) + '" font-size="11" fill="#6f84a3">' + U.thMonthShort(s) + '</text>';
+        g += '<text x="' + (X(mid) + 3) + '" y="' + (H - mb + 15) + '" font-size="11" fill="#8792a0">' + U.thMonthShort(s) + '</text>';
       d = new Date(d.getFullYear(), d.getMonth() + 1, 1);
     }
     const marks = [[c.q1, '1/4'], [c.q2, '2/4'], [c.end, 'สิ้นสุด']];
     if (c.ext) marks.push([c.endExt, 'ขยาย']);
     marks.forEach(function (m) {
-      g += '<line x1="' + X(m[0]) + '" x2="' + X(m[0]) + '" y1="' + mt + '" y2="' + (H - mb) + '" stroke="#1a56b0" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>' +
-        '<text x="' + (X(m[0]) - 3) + '" y="' + (mt + 10) + '" text-anchor="end" font-size="10.5" fill="#1a56b0">' + m[1] + '</text>';
+      g += '<line x1="' + X(m[0]) + '" x2="' + X(m[0]) + '" y1="' + mt + '" y2="' + (H - mb) + '" stroke="#123a5e" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>' +
+        '<text x="' + (X(m[0]) - 3) + '" y="' + (mt + 10) + '" text-anchor="end" font-size="10.5" fill="#123a5e">' + m[1] + '</text>';
     });
     const endPlan = U.planCum(p, until), endAct = U.actualCum(p, units, until);
     return '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif" role="img" aria-label="กราฟแผนและผลงานสะสม">' + g +
-      '<polyline points="' + planPts.join(' ') + '" fill="none" stroke="#9db5d8" stroke-width="2" stroke-dasharray="6 4"/>' +
-      (actPts.length ? '<polyline points="' + actPts.join(' ') + '" fill="none" stroke="#e0620f" stroke-width="2.6" stroke-linejoin="round"/>' +
-        '<circle cx="' + X(until) + '" cy="' + Y(endAct) + '" r="4" fill="#e0620f"/>' +
-        '<text x="' + Math.min(X(until) + 6, W - 60) + '" y="' + (Y(endAct) + (endAct > endPlan ? -8 : 14)) + '" font-size="12" font-weight="700" fill="#c2540c">' + endAct.toFixed(2) + '%</text>' : '') +
+      '<polyline points="' + planPts.join(' ') + '" fill="none" stroke="#FF6600" stroke-width="2" stroke-dasharray="6 4"/>' +
+      (actPts.length ? '<polyline points="' + actPts.join(' ') + '" fill="none" stroke="#1E7B1E" stroke-width="2.6" stroke-linejoin="round"/>' +
+        '<circle cx="' + X(until) + '" cy="' + Y(endAct) + '" r="4" fill="#1E7B1E"/>' +
+        '<text x="' + Math.min(X(until) + 6, W - 60) + '" y="' + (Y(endAct) + (endAct > endPlan ? -8 : 14)) + '" font-size="12" font-weight="700" fill="#176017">' + endAct.toFixed(2) + '%</text>' : '') +
       '</svg>';
   }
 
