@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>ระบบควบคุมงานโครงการ หมวดทางหลวงเชิงเนิน</title>
+<title>ผู้ควบคุมงานโครงการ หมวดทางหลวงเชิงเนิน</title>
 <link rel="icon" href="logo.png" data-cn-emblem>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -44,10 +44,10 @@ a{color:var(--acc-deep)}
 /* รูปแบบเดียวกับหัวเว็บระบบงานอุบัติเหตุ */
 .app-header{background:radial-gradient(1100px 420px at 12% -20%, var(--brand-800) 0%, #071b30 55%);color:var(--paper);padding:20px 22px 0;position:relative;border-bottom:1px solid rgba(0,0,0,.35)}
 .app-header .top-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;max-width:1180px;margin:0 auto}
-.app-header h1{font-size:21px;margin:0 0 3px;color:#fff;letter-spacing:-.01em;text-shadow:0 0 2px rgba(255,255,255,.6),0 0 9px rgba(255,255,255,.45),0 2px 4px rgba(0,0,0,.45)}
-.app-header h1 .demo-badge{text-shadow:none}
-/* ตรากรม: ขยายขนาด + เงาสีขาวล้อมรอบ */
-.dept-logo{width:50px;height:50px;flex:none;filter:drop-shadow(0 0 2px rgba(255,255,255,.95)) drop-shadow(0 0 7px rgba(255,255,255,.6)) drop-shadow(0 2px 4px rgba(0,0,0,.35))}
+.app-header h1{font-size:21px;margin:0 0 3px;color:#fff;letter-spacing:-.01em}
+/* ตรากรม: ล็อคตำแหน่ง ห่างขอบบนหัวเว็บ 23px (20px + 3px) เท่ากันทุกระบบ ไม่ขึ้นกับความสูงข้อความ */
+.brand-block{display:flex;align-items:flex-start;align-self:flex-start;gap:14px}
+.dept-logo{width:50px;height:50px;flex:none;margin-top:3px}
 .app-header .sub{font-size:13px;color:#9DA0A8;margin:0}
 .app-header .who{font-size:12px;color:#787B84;margin:0;text-align:right}
 /* ปุ่มออกจากระบบ: ไม่มีขอบ แบบ btn-ghost ของระบบงานอุบัติเหตุ */
@@ -268,10 +268,10 @@ html:has(.auth-gate.show){overflow-y:scroll}
 
 <header class="app-header" id="appHeader" style="display:none">
   <div class="top-row">
-    <div style="display:flex;align-items:center;gap:14px">
+    <div class="brand-block">
       <img src="logo.png" alt="ตรากรมทางหลวง" class="dept-logo">
       <div>
-        <h1>ระบบควบคุมงานโครงการ <span class="demo-badge" id="demoBadge" style="display:none">โหมดทดลอง</span></h1>
+        <h1>ผู้ควบคุมงานโครงการ <span class="demo-badge" id="demoBadge" style="display:none">โหมดทดลอง</span></h1>
         <p class="sub">หมวดทางหลวงเชิงเนิน · แขวงทางหลวงระยอง</p>
       </div>
     </div>

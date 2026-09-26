@@ -95,7 +95,7 @@
   function renderAuthGate(errorMsg) {
     const g = gate(); hideLoading(); g.classList.add('show');
     $('appHeader').style.display = 'none'; $('main').style.display = 'none';
-    const head = '<img src="logo.png" alt="ตรากรมทางหลวง" class="auth-logo"><h2>ระบบควบคุมงานโครงการ</h2>' +
+    const head = '<img src="logo.png" alt="ตรากรมทางหลวง" class="auth-logo"><h2>ผู้ควบคุมงานโครงการ</h2>' +
       '<p class="auth-sub">หมวดทางหลวงเชิงเนิน · แขวงทางหลวงระยอง</p>';
     const demo = FBL.mode === 'demo' ? '<div class="auth-demo">โหมดทดลอง: ยังไม่ได้เชื่อม Firebase — ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น</div>' : '';
     const errHtml = '<p class="hint auth-error" id="gateError" style="' + (errorMsg ? '' : 'display:none') + '">' + esc(errorMsg || '') + '</p>';
@@ -257,7 +257,7 @@
     if (fn) { try { fn(el); } catch (e) { console.error(e); el.innerHTML = '<div class="card"><b>แสดงผลไม่สำเร็จ</b><p class="hint">' + esc(e.message) + '</p></div>'; } }
   };
   function welcomeHtml() {
-    return '<div class="card welcome"><h2>ยินดีต้อนรับสู่ระบบควบคุมงานโครงการ</h2>' +
+    return '<div class="card welcome"><h2>ยินดีต้อนรับสู่ ผู้ควบคุมงานโครงการ</h2>' +
       '<p class="muted">เริ่มจากสร้างโครงการใหม่ แล้วกรอกข้อมูลสัญญา หรือนำเข้าข้อมูลโครงการจากไฟล์สำรอง (.json)</p>' +
       '<div class="flex" style="justify-content:center;margin-top:14px"><button class="btn btn-primary" id="wNew">+ สร้างโครงการใหม่</button>' +
       '<button class="btn btn-outline" id="wImp">นำเข้าจากไฟล์ .json</button></div></div>';
